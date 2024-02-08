@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ModeBtn from "./ModeBtn";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   let [open, setOpen] = useState(false);
@@ -21,14 +22,13 @@ function Navbar() {
         <ul
           className={`xl:flex md:items-center xl:pb-0 pb-12 absolute xl:static bg-white xl:z-auto z-[-1] left-0 w-full xl:w-auto xl:pl-0 pl-9 transition-all duration-500 ease-in ${open ? 'top-20 ':'top-[-490px]'}`}
         >
-          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Home</li>
-          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Business</li>
-          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Entertainment</li>
-          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">General</li>
-          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Health</li>
-          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Science</li>
-          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Sports</li>
-          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Technology</li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0"><Link to="/">Home</Link></li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0"><Link to="/business">Business</Link></li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0"><Link to="/entertainment">Entertainment</Link></li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0"><Link to="/health">Health</Link></li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0"><Link to="/science">Science</Link></li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0"><Link to="/sports">Sports</Link></li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0"><Link to="/technology">Technology</Link></li>
           <ModeBtn />
         </ul>
       </div>
