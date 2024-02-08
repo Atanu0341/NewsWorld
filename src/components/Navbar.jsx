@@ -14,17 +14,21 @@ function Navbar() {
         </div>
         <div
           onClick={() => setOpen(!open)}
-          className="text-3xl absolute right-8 top-6 cursor-pointer md:hidden"
+          className="text-3xl absolute right-8 top-6 cursor-pointer xl:hidden"
         >
           <ion-icon name={open ? "close" : "menu"}></ion-icon>
         </div>
         <ul
-          className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static bg-white md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-500 ease-in ${open ? 'top-20 ':'top-[-490px]'}`}
+          className={`xl:flex md:items-center xl:pb-0 pb-12 absolute xl:static bg-white xl:z-auto z-[-1] left-0 w-full xl:w-auto xl:pl-0 pl-9 transition-all duration-500 ease-in ${open ? 'top-20 ':'top-[-490px]'}`}
         >
-          <li className="md:ml-8 text-xl md:my-0 my-7">Home</li>
-          <li className="md:ml-8 text-xl md:my-0 my-7">Service</li>
-          <li className="md:ml-8 text-xl md:my-0 my-7">About</li>
-          <li className="md:ml-8 text-xl md:my-0 my-7">Contact</li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Home</li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Business</li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Entertainment</li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">General</li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Health</li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Science</li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Sports</li>
+          <li className="md:ml-8 text-xl md:my-0 my-7 md:p-4 xl:p-0">Technology</li>
           <ModeBtn />
         </ul>
       </div>
