@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
+import Spinner from "./Spinner";
 
 export default class News extends Component {
   constructor() {
@@ -8,22 +9,69 @@ export default class News extends Component {
     this.state = {
       articles: [],
       loading: false,
+      page: 1,
     };
   }
   async componentDidMount() {
-    let url =
-      "https://newsapi.org/v2/top-headlines?country=in&apiKey=5deb2b3fc6bb42b6a4d5d191d458a8dd";
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=5deb2b3fc6bb42b6a4d5d191d458a8dd&page=1&pageSize=${this.props.pageSize}`;
+    this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
     console.log(parsedData);
-    this.setState({ articles: parsedData.articles });
+    this.setState({
+      articles: parsedData.articles,
+      totalArticles: parsedData.totalResults,
+      loading: false,
+    });
   }
+
+  handlePreviousClick = async () => {
+    console.log("prev");
+
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=5deb2b3fc6bb42b6a4d5d191d458a8dd&page=${
+      this.state.page - 1
+    }&pageSize=${this.props.pageSize}`;
+    this.setState({ loading: true });
+    let data = await fetch(url);
+    let parsedData = await data.json();
+
+    this.setState({
+      page: this.state.page - 1,
+      articles: parsedData.articles,
+      loading: false,
+    });
+  };
+
+  handleNextClick = async () => {
+    console.log("next");
+
+    if (
+      !(
+        this.state.page + 1 >
+        Math.ceil(this.state.totalResults / this.props.pageSize)
+      )
+    ) {
+      let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=5deb2b3fc6bb42b6a4d5d191d458a8dd&page=${
+        this.state.page + 1
+      }&pageSize=${this.props.pageSize}`;
+      this.setState({ loading: true });
+      let data = await fetch(url);
+      let parsedData = await data.json();
+
+      this.setState({
+        page: this.state.page + 1,
+        articles: parsedData.articles,
+        loading: false,
+      });
+    }
+  };
   render() {
     return (
       <div>
-        <h2 className="p-4 text-center text-white font-bold">Latest News</h2>
+        <h1 className="p-4 text-center text-white font-bold">Latest News</h1>
+        {this.state.loading && <Spinner />}
         <div className="flex flex-wrap justify-center items-center">
-          {this.state.articles.map((element) => {
+          {!this.state.loading && this.state.articles.map((element) => {
             return (
               <div
                 key={element.url}
@@ -40,6 +88,27 @@ export default class News extends Component {
               </div>
             );
           })}
+        </div>
+        <div className="flex justify-between">
+          <button
+            disabled={this.state.page <= 1}
+            onClick={this.handlePreviousClick}
+            type="button"
+            className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          >
+            &larr; Previous
+          </button>
+          <button
+            disabled={
+              this.state.page + 1 >
+              Math.ceil(this.state.totalResults / this.props.pageSize)
+            }
+            onClick={this.handleNextClick}
+            type="button"
+            className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          >
+            Next &rarr;
+          </button>
         </div>
       </div>
     );
