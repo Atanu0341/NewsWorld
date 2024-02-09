@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 export default class NewsItem extends Component {
   render() {
-    let { title, description, imageUrl, newsUrl } = this.props;
+    let { title, description, imageUrl, newsUrl, author, date } = this.props;
     return (
       <div className="flex flex-col overflow-hidden border-2 border-white rounded-md w-full mb-8">
         <div className="h-48 overflow-hidden">
@@ -17,14 +17,13 @@ export default class NewsItem extends Component {
 
         <p className="text-white">{description} ....</p>
 
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col items-center">
-            <span className="text-white">author</span>
-            <span className="text-white">publishedAt</span>
-          </div>
+        <span className="text-white">
+          By {!author ? "Unknown" : author} on {new Date(date).toGMTString()}
+        </span>
 
-          <a href={newsUrl} target="_blank" className="text-white">Read More</a>
-        </div>
+        <a href={newsUrl} target="_blank" className="text-white">
+          Read More
+        </a>
       </div>
     );
   }
