@@ -28,3 +28,5 @@ const NewsItem = (props) => {
 };
 
 export default NewsItem;
+
+
