@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default class News extends Component {
   static defaultProps = {
@@ -17,17 +18,20 @@ export default class News extends Component {
 
   capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+  };
 
   constructor(props) {
     super(props);
     console.log("Hello");
     this.state = {
       articles: [],
-      loading: false,
+      loading: true,
       page: 1,
+      totalResults: 0,
     };
-    document.title = `${this.capitalizeFirstLetter(this.props.category)} - NewsWorld`;
+    document.title = `${this.capitalizeFirstLetter(
+      this.props.category
+    )} - NewsWorld`;
   }
 
   async updateNews() {
@@ -38,41 +42,46 @@ export default class News extends Component {
     console.log(parsedData);
     this.setState({
       articles: parsedData.articles,
-      totalArticles: parsedData.totalResults,
+      totalResults: parsedData.totalResults,
       loading: false,
     });
   }
 
   async componentDidMount() {
-    this.updateNews()
+    this.updateNews();
   }
 
-  handlePreviousClick = async () => {
-    console.log("prev");
+  fetchMoreData = async () => {
+    this.setState({ page: this.state.page + 1 });
+    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=5deb2b3fc6bb42b6a4d5d191d458a8dd&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    console.log(parsedData);
     this.setState({
-      page: this.state.page - 1,
+      articles: this.state.articles.concat(parsedData.articles),
+      totalResults: parsedData.totalResults,
     });
-    this.updateNews();
   };
 
-  handleNextClick = async () => {
-    console.log("next");
-    this.setState({
-      page: this.state.page + 1,
-    });
-    this.updateNews();
-  };
   render() {
     return (
       <div>
-        <h1 className="p-4 text-center text-white font-bold">Top {this.capitalizeFirstLetter(this.props.category)} Headlines</h1>
+        <h1 className="p-4 text-center text-white font-bold">
+          Top {this.capitalizeFirstLetter(this.props.category)} Headlines
+        </h1>
         {this.state.loading && <Spinner />}
-        <div className="flex flex-wrap justify-center items-center">
-          {!this.state.loading &&
-            this.state.articles.map((element) => {
+        <InfiniteScroll
+          dataLength={this.state.articles.length}
+          next={this.fetchMoreData}
+          hasMore={this.state.articles.length !== this.state.totalResults}
+          loader={<Spinner />}
+        >
+          <div className="flex flex-wrap justify-center items-center">
+            {this.state.articles.map((element, index) => {
               return (
                 <div
-                  key={element.url}
+                  key={`${element.url}-${index}`}
                   className="w-full md:w-1/3 lg:w-1/3 xl:w-1/3 p-4"
                 >
                   <NewsItem
@@ -90,28 +99,8 @@ export default class News extends Component {
                 </div>
               );
             })}
-        </div>
-        <div className="flex justify-between">
-          <button
-            disabled={this.state.page <= 1}
-            onClick={this.handlePreviousClick}
-            type="button"
-            className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-          >
-            &larr; Previous
-          </button>
-          <button
-            disabled={
-              this.state.page + 1 >
-              Math.ceil(this.state.totalResults / this.props.pageSize)
-            }
-            onClick={this.handleNextClick}
-            type="button"
-            className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-          >
-            Next &rarr;
-          </button>
-        </div>
+          </div>
+        </InfiniteScroll>
       </div>
     );
   }
