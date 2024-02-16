@@ -9,12 +9,13 @@ const App = () => {
   const apiKey = import.meta.env.VITE_REACT_APP_NEWS_API;
 
   const [progress, setProgress] = useState(0);
+  const [darkTheme, setDarkTheme] = useState(false);
 
   return (
     <>
       <Router>
-        <div className="bg-slate-700 h-full">
-          <Navbar />
+        <div className={`bg-slate-700 h-full ${darkTheme ? 'dark' : ''}`}>
+          <Navbar darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
           <LoadingBar color="#f11946" height={3} progress={progress} />
           <div>
             <Routes>
